@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>04_component_props</title>
+</head>
+<body>
+
+<ul>
+  <li>姓名: 张三</li>
+  <li>性别: 女</li>
+  <li>年龄: 23</li>
+</ul>
+<hr>
+
+<div id="test1"></div>
+<div id="test2"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script type="text/babel">
+  /*
+  组件3大属性之一: props属性
+  1. 每个组件对象都会有props(properties的简写)属性
+  2. 组件标签的所有属性都保存在props中
+  3. 内部读取某个属性值: this.props.propertyName
+  4. 作用: 通过标签属性从组件外向组件内传递数据(只读)
+  5. 使用PropTypes对props进行类型检查
+    Person.propTypes = {
+      name: PropTypes.string.isRequired,
+      age: PropTypes.number.isRequired
+    }
+  6. 扩展属性: 将对象的所有属性通过props传递
+    <Person {...person}/>
+  7. 默认属性值
+    Person.defaultProps = {
+      name: 'Mary'
+    };
+  8. 组件类的构造函数
+    constructor (props) {
+      super(props);
+      console.log(props); // 查看所有属性
+    }
+
+  问题: 为什么要设计对prop会进行约束的语法?
+  */
+
+  /*
+  需求: 自定义用来显示一个人员信息的组件, 效果如页面. 说明
+    1). 如果性别没有指定, 默认为男
+    2). 如果年龄没有指定, 默认为18
+  */
+  /*
+    props和state区别？
+      props：组件外向组件内传递数据（多个组件共享同一个状态state，通过父容器props注入到子容器中）
+      state：组件内的数据（只有组件内部使用，父组件）
+  */
+  //定义组件
+  class Person extends React.Component {
+    constructor (props) {
+      super(props);
+      // 传递props就能在constructor函数使用this.props
+      console.log(this.props); //undefined
+    }
+
+    render () {
+      //接受传递进来的props属性
+      const {name, age, sex} = this.props;
+      return (
+        <ul>
+          <li>姓名: {name}</li>
+          <li>性别: {age}</li>
+          <li>年龄: {sex}</li>
+        </ul>
+      )
+    }
+  }
+  //声明接受的属性，建立约束对象
+  Person.propTypes = {
+    name: PropTypes.string.isRequired,  //数据类型是字符串，必须传
+    age: PropTypes.number,              //数据类型是数值
+    sex: PropTypes.string               //数据类型是字符串
+  }
+  //设置默认属性
+  Person.defaultProps = {
+    age: 20,
+    sex: '男'
+  }
+  //请求回来数据
+  let data = {name: '田齐', age: 18, sex: '男'};
+  /*
+    通过标签属性的方式，组件外向组件内传递属性props
+   */
+  //渲染渲染
+  ReactDOM.render(<Person {...data}/>, document.getElementById('test1'));
+  // ReactDOM.render(<Person name={data.name} age={data.age} sex={data.sex}/>, document.getElementById('test1'));
+
+
+</script>
+</body>
+</html>
+
